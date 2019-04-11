@@ -1,0 +1,33 @@
+{
+  "forum": {
+    "boards": ["b"]
+  },
+  "filter": {
+    "white": [
+      "webm",
+      "цуиь",
+      "вебм",
+      "mp4",
+      "ьз4",
+      "музыкальн",
+      "music",
+      "танц",
+      "dance",
+      "аниме",
+      "anime",
+      "tik"
+    ],
+    "black": [
+      "war",
+      "вар",
+      "dark",
+      "black",
+      "дарк",
+      "порн",
+      "porn",
+      "fap",
+      "фап"
+    ],
+    "min_posts_count": 20
+  }
+}
