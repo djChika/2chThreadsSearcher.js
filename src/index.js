@@ -6,16 +6,18 @@ const CONFIG = JSON.parse(JSON.stringify(path_to_config));
 //GET TARGET BOARDS LIST AND FILTER
 let boards = CONFIG.forum.boards;
 if (!boards) {
-  console.log("Missing boards list in config.json");
+  console.log("Error! Missing boards list in config.json.");
   return;
 }
 boards = [...new Set(boards)];
 
 let filter = CONFIG.filter;
-if (filter) {
-  filter.white = [...new Set(filter.white)];
-  filter.black = [...new Set(filter.black)];
+if (!filter || filter.white || filter.black) {
+  console.log("Error! Missing filter in config.json.");
+  return;
 }
+filter.white = [...new Set(filter.white)];
+filter.black = [...new Set(filter.black)];
 //
 
 //FIND AND OPEN THREADS

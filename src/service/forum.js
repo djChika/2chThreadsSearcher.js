@@ -13,7 +13,7 @@ async function getThreads(url, filter) {
   }
 
   if (!filter) {
-    return board["threads"];
+    return;
   }
 
   let filtered_threads = [];
