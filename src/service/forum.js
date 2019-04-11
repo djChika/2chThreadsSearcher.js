@@ -38,9 +38,10 @@ async function getThreads(url, filter) {
   //
 
   //FILTER BY POSTS COUNT
-  filtered_threads = filtered_threads.filter(
-    x => x["posts_count"] >= filter.min_posts_count
-  );
+  if (filter.min_posts_count)
+    filtered_threads = filtered_threads.filter(
+      x => x["posts_count"] >= filter.min_posts_count
+    );
   //
 
   return filtered_threads;
