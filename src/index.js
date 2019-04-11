@@ -12,7 +12,7 @@ if (!boards) {
 boards = [...new Set(boards)];
 
 let filter = CONFIG.filter;
-if (!filter || filter.white || filter.black) {
+if (!filter || !filter.white || !filter.black) {
   console.log("Error! Missing filter in config.json.");
   return;
 }
