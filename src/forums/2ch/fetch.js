@@ -1,26 +1,19 @@
 const axios = require("axios");
+const { getCatalogJson, getThreadUrl, getThreadJson } = require("./urls");
 
-async function getThreads(url, filter) {
-  let board = await axios
-    .get(url)
+async function getThreads(board, filter) {
+  let catalog = await axios
+    .get(getCatalogJson(board))
     .then(x => x.data)
     .catch(x => {
-      return [];
+      throw `Error while fetching 2ch/${board} catalog!`;
     });
-
-  if (!board || board.length === 0) {
-    return;
-  }
-
-  if (!filter) {
-    return;
-  }
 
   let filtered_threads = [];
 
   //FILTER WITH WHITELIST
   filter.white.forEach(x => {
-    board["threads"].forEach(thread => {
+    catalog["threads"].forEach(thread => {
       if (thread["subject"].search(new RegExp(x, "i")) !== -1) {
         if (!filtered_threads.some(t => t.num === thread["num"]))
           filtered_threads.push(thread);
@@ -44,7 +37,9 @@ async function getThreads(url, filter) {
     );
   //
 
-  return filtered_threads;
+  let urls = filtered_threads.map(x => getThreadUrl(board, x.num));
+
+  return urls;
 }
 
 module.exports = {

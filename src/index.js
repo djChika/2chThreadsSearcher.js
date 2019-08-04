@@ -3,42 +3,35 @@ const path_to_config = require("./config.json");
 const CONFIG = JSON.parse(JSON.stringify(path_to_config));
 //
 
-//GET TARGET BOARDS LIST AND FILTER
-let boards = CONFIG.forum.boards;
-if (!boards) {
-  console.log("Error! Missing boards list in config.json.");
-  return;
-}
-boards = [...new Set(boards)];
-
-let filter = CONFIG.filter;
-if (!filter || !filter.white || !filter.black) {
-  console.log("Error! Missing filter in config.json.");
-  return;
-}
-filter.white = [...new Set(filter.white)];
-filter.black = [...new Set(filter.black)];
-//
+const { openURL } = require("./service/browser");
+const { checkForumConfig } = require("./service/validate");
 
 //FIND AND OPEN THREADS
-const forum_service = require("./service/forum");
-const browser = require("./service/browser");
+const { forums } = CONFIG;
+forums.forEach((forum, index) => {
+  if (!checkForumConfig(forum)) {
+    throw `Invalid ${forum.name} config! (Item #${index})`;
+  }
 
-boards.forEach(board => {
-  board = board.toLowerCase();
-  const URL_CATALOG = "https://2ch.hk/" + board + "/threads.json";
-  const URL_THREAD = "http://2ch.hk/" + board + "/res/";
-  const URL_THREAD_END = ".html";
+  let boards = [...new Set(forum.boards.map(x => x.toLowerCase()))];
 
-  forum_service.getThreads(URL_CATALOG, filter).then(res => {
-    if (!res || res.length === 0) {
-      console.log("No threads found  in /" + board);
-      return;
-    } else {
-      console.log("Found " + res.length + " thread(s) in /" + board);
-    }
-    res.forEach(x => {
-      browser.openURL(URL_THREAD + x.num + URL_THREAD_END);
+  let filter = forum.filter;
+  filter.white = [...new Set(filter.white)];
+  if (filter.black) filter.black = [...new Set(filter.black)];
+  if (filter.content) filter.content = [...new Set(filter.content)];
+
+  const { getThreads } = require("./forums/" + forum.name + "/fetch");
+  console.log(`Searching threads in ${forum.name}...`);
+  boards.forEach(board => {
+    getThreads(board, filter).then(res => {
+      if (!res || res.length === 0) {
+        console.log("No threads found  in " + `/${board}`);
+      } else {
+        console.log("Found " + res.length + " thread(s) in " + `/${board}`);
+        res.forEach(url => {
+          openURL(url);
+        });
+      }
     });
   });
 });
