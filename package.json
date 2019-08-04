@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
-    "opn": "^6.0.0"
+    "open": "^6.4.0"
   }
 }

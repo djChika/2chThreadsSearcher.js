@@ -1,7 +1,7 @@
-const opn = require("opn");
+const open = require("open");
 
 function openURL(url) {
-  opn(url);
+  open(url);
 }
 
 module.exports = {
