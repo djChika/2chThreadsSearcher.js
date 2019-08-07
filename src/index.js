@@ -3,8 +3,8 @@ const path_to_config = require("./config.json");
 const CONFIG = JSON.parse(JSON.stringify(path_to_config));
 //
 
+const { checkForumConfig, distinctArray } = require("./service/tools");
 const { openURL } = require("./service/browser");
-const { checkForumConfig } = require("./service/validate");
 
 //FIND AND OPEN THREADS
 const { forums } = CONFIG;
@@ -13,14 +13,18 @@ forums.forEach((forum, index) => {
     throw `Invalid ${forum.name} config! (Item #${index})`;
   }
 
-  let boards = [...new Set(forum.boards.map(x => x.toLowerCase()))];
+  let boards = distinctArray(forum.boards);
 
   let filter = forum.filter;
-  filter.white = [...new Set(filter.white)];
-  if (filter.black) filter.black = [...new Set(filter.black)];
-  if (filter.content) filter.content = [...new Set(filter.content)];
+  filter.white = distinctArray(filter.white);
+  if (filter.black) {
+    filter.black = distinctArray(filter.black);
+  }
+  if (filter.content) {
+    filter.content.types = distinctArray(filter.content.types);
+  }
 
-  const { getThreads } = require("./forums/" + forum.name + "/fetch");
+  const { getThreads } = require("./forums/" + forum.name + "/request");
   console.log(`Searching threads in ${forum.name}...`);
   boards.forEach(board => {
     getThreads(board, filter).then(res => {

@@ -4,6 +4,11 @@ function checkForumConfig(forum) {
   return true;
 }
 
+function distinctArray(arr) {
+  return arr.filter((x, i) => arr.indexOf(x.toLowerCase()) === i);
+}
+
 module.exports = {
-  checkForumConfig
+  checkForumConfig,
+  distinctArray
 };

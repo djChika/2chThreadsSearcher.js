@@ -29,7 +29,7 @@
           "fap",
           "фап"
         ],
-        "content": ["webm", "mp4"],
+        "content": { "types": ["webm", "mp4"], "percent": 0.4 },
         "min_posts_count": 20
       }
     }
